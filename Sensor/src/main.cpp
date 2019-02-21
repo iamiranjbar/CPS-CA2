@@ -21,7 +21,7 @@ void loop() {
   Serial.println(thisString + " " + String(ultrasonic.Ranging(CM)));
   thisString = thisString + " " + String(ultrasonic.Ranging(CM));
   Wire.beginTransmission(9); // transmit to device #9
-  Wire.write(thisString.c_str());              // sends x 
+  Wire.write(thisString.c_str(), thisString.length());              // sends x 
   Wire.endTransmission();    // stop transmitting
 
   /* 5*temp/1024 is to convert the 10 bit number to a voltage reading.
