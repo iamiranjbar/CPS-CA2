@@ -10,14 +10,16 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 String s;
 
-void recieveEvent(int bytes)
-{  
-  s = "";
-  while(Wire.available())
+void getSensorsData(){
+  s ="";
+  char c= '!';
+  while(Serial.available() && c != '@')   
   { 
-    char c = Wire.read();
-    s += String(c);
+    c = Serial.read();
+    if (c!='@')    
+      s += c;
   }
+  Serial.println(s);
 }
 
 void setup()
@@ -32,12 +34,12 @@ void setup()
   lcd.begin(16,4);               // initialize the lcd 
   lcd.home ();                   // go home
   lcd.setCursor ( 0, 1 );        // go to the next line   
-
-  Wire.begin(9);
-  Wire.onReceive(recieveEvent);
 }
 
 void loop()
 {
-  lcd.print(s);
+  getSensorsData();
+  lcd.println(s);
+  delay(250);
+  lcd.clear();
 }
