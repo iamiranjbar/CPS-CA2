@@ -6,7 +6,7 @@
 #define   CONTRAST_PIN   9
 #define   BACKLIGHT_PIN  7
 #define   CONTRAST       110 
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2, BACKLIGHT_PIN, POSITIVE );
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 
 // Creat a set of new characters
@@ -62,9 +62,10 @@ void setup()
   lcd.createChar (2, frownie);   // load character to the LCD
 
   lcd.home ();                   // go home
-  lcd.print("Hello, ARDUINO ");  
+   
   lcd.setCursor ( 0, 1 );        // go to the next line
-  lcd.print (" FORUM - fm   ");      
+  lcd.print("Hello, ARDUINO "); 
+  // lcd.print (" FORUM - fm   ");      
 }
 
 void loop()
@@ -74,6 +75,6 @@ void loop()
   lcd.print (char(2));
   delay (200);
   lcd.setCursor ( 14, 1 );
-  lcd.print ( char(0));
+  lcd.print ( char(1));
   delay (200);
 }
