@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "/Users/amir/.platformio/penv/bin:/Users/amir/.platformio/penv:/usr/local/git/bin:/sw/bin/:/usr/local/bin:/usr/local/:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/usr/local/bin/:/Users/amir/Library/Python/2.7/bin",
+        "PLATFORMIO_CALLER": "vscode"
+    }
+}
