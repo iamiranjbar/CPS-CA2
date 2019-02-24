@@ -1,5 +1,5 @@
 #include <Arduino.h>
-
+#include <SoftwareSerial.h>
 #include <Wire.h>
 
 #define XSTART 10
@@ -7,7 +7,7 @@
 #define BYTENUMBER 4
 
 float get_data_from_registers(int i);
-
+SoftwareSerial mySerial(0, 1);
 void setup() {
   Wire.begin();
   Wire.beginTransmission(110);
@@ -34,6 +34,7 @@ void loop() {  // put delay for avoid invalid pairing of (x,y) s
   float res = pow(x, 2) + pow(y, 2);
   byte* b = (byte*) &res;
   Serial.write(b, 4);
+  Serial.write('#');
 }
 
 

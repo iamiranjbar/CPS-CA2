@@ -6,6 +6,8 @@
 
 // #define   CONTRAST_PIN   9
 #define   BACKLIGHT_PIN  7
+#define RxD 8
+#define TxD 9
 // #define   CONTRAST       110 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 AltSoftSerial altSerial;
@@ -25,14 +27,18 @@ void getSensorsData(){
     if (c!='@')    
       s += c;
   }
+  s += '\0';
   Serial.println(s);
 }
 
 float getUTData(){
   binaryFloat bn;
-  for(int i = 0; i < 4; i++)
+  char c= '!';
+  int i = 0;
+  while(altSerial.available() && c != '#')
   { 
-    bn.binary[i] = altSerial.read();
+    c = altSerial.read();
+    bn.binary[i++] = c;
     Serial.println(bn.binary[i]);
   }
   Serial.println(bn.fp);
@@ -41,6 +47,8 @@ float getUTData(){
 
 void setup()
 {
+  pinMode(RxD, INPUT);
+  pinMode(TxD, OUTPUT);
   Serial.begin ( 9600 );
 
   // Switch on the backlight and LCD contrast levels
