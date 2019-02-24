@@ -11,7 +11,13 @@
 // #define   CONTRAST       110 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 AltSoftSerial altSerial;
-String s;
+String sensorData;
+binaryFloat bn;
+char lastUtData = '!';
+char lastSensorData = '!';
+int utiterator = 0;
+bool utDataCompleted = false;
+bool sensorDataCompleted = false;
 
 typedef union{
   float fp;
@@ -19,30 +25,33 @@ typedef union{
 } binaryFloat;
 
 void getSensorsData(){
-  s ="";
-  char c= '!';
-  while(Serial.available() && c != '@')   
+  if(Serial.available() && lastSensorData != '@')   
   { 
-    c = Serial.read();
-    if (c!='@')    
-      s += c;
+    lastSensorData = Serial.read();
+    if (lastSensorData != '@')    
+      sensorData += lastSensorData;
   }
-  s += '\0';
-  Serial.println(s);
+
+  if (lastSensorData == '@') {
+    sensorData += '\0';
+    sensorDataCompleted = true;
+    lastSensorData = '!';
+  }
 }
 
-float getUTData(){
-  binaryFloat bn;
-  char c= '!';
-  int i = 0;
-  while(altSerial.available() && c != '#')
+void getUTData(){
+  if(altSerial.available() && lastUtData != '#')
   { 
-    c = altSerial.read();
-    bn.binary[i++] = c;
-    Serial.println(bn.binary[i]);
+    lastUtData = altSerial.read();
+    bn.binary[utiterator++] = lastUtData;
   }
-  Serial.println(bn.fp);
-  return bn.fp;
+
+  if (lastUtData == '#') {
+    utDataCompleted = true;
+    lastUtData = '!';
+  }
+  
+  // Serial.println(bn.fp);
 }
 
 void setup()
@@ -63,10 +72,21 @@ void setup()
 
 void loop()
 {
+  float UTdata = 0;
   getSensorsData();
-  float UTdata = getUTData();
-  lcd.println(s);
+  getUTData();
+  if(utDataCompleted){
+    UTdata = bn.fp;
+    utDataCompleted = false;
+  }
+  
+  lcd.println(sensorData);
   lcd.println(UTdata);
   delay(250);
   lcd.clear();
+
+  if (sensorDataCompleted) {
+    sensorDataCompleted = false;
+    sensorData = "";
+  }
 }

@@ -6,6 +6,7 @@
 #define YSTART 40
 #define BYTENUMBER 4
 
+float res = 0;
 float get_data_from_registers(int i);
 SoftwareSerial mySerial(0, 1);
 void setup() {
@@ -31,7 +32,7 @@ void loop() {  // put delay for avoid invalid pairing of (x,y) s
   // Serial.print(x);
   // Serial.print("      Y = ");
   // Serial.println(y);
-  float res = pow(x, 2) + pow(y, 2);
+  res += pow(x, 2) + pow(y, 2);
   byte* b = (byte*) &res;
   Serial.write(b, 4);
   Serial.write('#');
