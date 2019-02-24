@@ -15,13 +15,11 @@ void setup() {
 void loop() {
   int temp=analogRead(TEMPPIN); 
   temp=(5.0*temp*1000.0)/(1024*10);
-  // Serial.println(temp);
-  // Serial.println(ultrasonic.Ranging(CM));
+
   String thisString = String(temp);
-  // Serial.println(thisString + " " + String(ultrasonic.Ranging(CM)));
   thisString = thisString + " " + String(ultrasonic.Ranging(CM));
   thisString+= "@";
-  // Serial.println(thisString);
+  
   Serial.write(thisString.c_str(), thisString.length());
   delay(250);
 }

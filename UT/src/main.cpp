@@ -36,6 +36,7 @@ void loop() {  // put delay for avoid invalid pairing of (x,y) s
   byte* b = (byte*) &res;
   Serial.write(b, 4);
   Serial.write('#');
+  delay(250);
 }
 
 

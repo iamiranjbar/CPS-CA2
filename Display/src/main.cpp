@@ -11,13 +11,8 @@
 // #define   CONTRAST       110 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 AltSoftSerial altSerial;
-String sensorData;
-binaryFloat bn;
-char lastUtData = '!';
-char lastSensorData = '!';
-int utiterator = 0;
-bool utDataCompleted = false;
-bool sensorDataCompleted = false;
+String s1;
+String s2;
 
 typedef union{
   float fp;
@@ -25,33 +20,41 @@ typedef union{
 } binaryFloat;
 
 void getSensorsData(){
-  if(Serial.available() && lastSensorData != '@')   
+  s1 ="";
+  s2 ="";
+  char c= '!';
+  bool seen = false;
+  while(Serial.available() && c != '@')   
   { 
-    lastSensorData = Serial.read();
-    if (lastSensorData != '@')    
-      sensorData += lastSensorData;
+    if(c == ' '){
+      seen = true;
+    }
+    c = Serial.read();
+    if (c!='@' && c!=' '){
+      if(seen)  
+        s2 += c;
+      else
+        s1 += c;
+    }
   }
-
-  if (lastSensorData == '@') {
-    sensorData += '\0';
-    sensorDataCompleted = true;
-    lastSensorData = '!';
-  }
+  s1 += '\0';
+  s2 += '\0';
+  Serial.println(s1);
+  Serial.println(s2);
 }
 
-void getUTData(){
-  if(altSerial.available() && lastUtData != '#')
+float getUTData(){
+  binaryFloat bn;
+  char c= '!';
+  int i = 0;
+  while(altSerial.available() && c != '#')
   { 
-    lastUtData = altSerial.read();
-    bn.binary[utiterator++] = lastUtData;
+    c = altSerial.read();
+    bn.binary[i++] = c;
+    Serial.println(bn.binary[i]);
   }
-
-  if (lastUtData == '#') {
-    utDataCompleted = true;
-    lastUtData = '!';
-  }
-  
-  // Serial.println(bn.fp);
+  Serial.println(bn.fp);
+  return bn.fp;
 }
 
 void setup()
@@ -72,21 +75,14 @@ void setup()
 
 void loop()
 {
-  float UTdata = 0;
   getSensorsData();
-  getUTData();
-  if(utDataCompleted){
-    UTdata = bn.fp;
-    utDataCompleted = false;
-  }
-  
-  lcd.println(sensorData);
+  float UTdata = getUTData();
+  lcd.setCursor(0, 0);
   lcd.println(UTdata);
+  lcd.setCursor(0, 1);
+  lcd.println(s1);
+  lcd.setCursor(0, 2);
+  lcd.println(s2);
   delay(250);
   lcd.clear();
-
-  if (sensorDataCompleted) {
-    sensorDataCompleted = false;
-    sensorData = "";
-  }
 }
