@@ -21,5 +21,5 @@ void loop() {
   thisString+= "@";
   
   Serial.write(thisString.c_str(), thisString.length());
-  delay(250);
+  delay(100);
 }

@@ -83,6 +83,6 @@ void loop()
   lcd.println(s1);
   lcd.setCursor(0, 2);
   lcd.println(s2);
-  delay(250);
+  delay(100);
   lcd.clear();
 }
